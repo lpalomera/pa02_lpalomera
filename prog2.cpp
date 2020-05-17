@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
     ifstream myfile;
     ///autograder/submission/PA2_dataset.txt
     
-    myfile.open("PA2_dataset.txt");       
+    myfile.open("/autograder/submission/PA2_dataset.txt");       
     char output[100];
     int convert;
     int z=0;
