@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
     int convert;
     int z=0;
     if (myfile.is_open()) {
-        while (!myfile.eof() && z<9999) {
+        while (!myfile.eof() && z<10000) {
             z++;
             myfile >> output;
             convert=stoi(output);
