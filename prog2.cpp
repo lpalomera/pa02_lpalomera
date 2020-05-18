@@ -10,7 +10,7 @@ using namespace std;
 
 int main(int argc, char *argv[]){
     minMaxHeap h1;
-    
+/*    
     h1.insert(1);
     h1.insert(4);
     h1.insert(8);
@@ -21,14 +21,14 @@ int main(int argc, char *argv[]){
     h1.insert(165);
     h1.insert(331);
     cout<<"----------------"<<endl; 
+*/
 
 
 
-/*
     ifstream myfile;
     ///autograder/submission/PA2_dataset.txt
     
-    myfile.open("PA2_dataset.txt");       
+    myfile.open("/autograder/submission/PA2_dataset.txt");       
     char output[100];
     int convert;
     int z=0;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
             }
     }
     myfile.close();
-*/
+
 
  string parse = argv[1];
  vector<string> phrase;
