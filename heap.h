@@ -31,6 +31,20 @@ class minMaxHeap{
     void printHeap();
 
     //swaps the two values located at the indeces
+    //void swap(int &ind1, int &ind2);
+
+    //should percolate the new index up if need be
+    //void percUP(int i);
+
+    //Helper function to fix a deleted min
+    //void TrickleDownMin(int i);
+
+    //Helper function to fix a deleted max
+    //void TrickleDownMax(int i);
+
+
+    private:
+    //swaps the two values located at the indeces
     void swap(int &ind1, int &ind2);
 
     //should percolate the new index up if need be
@@ -42,18 +56,22 @@ class minMaxHeap{
     //Helper function to fix a deleted max
     void TrickleDownMax(int i);
 
-
-    private:
+    //Helper function that will get max index of possible grand and/or children
     int descendantMax(int i);
 
+    //Will return the max of two values
     int maxCpr(int x, int y);
-
+    
+    //Helper function that will get min index of possible grand and/or children
     int descendantMin(int i);
 
+    //Will return the min of two values
     int minCpr(int x, int y);
 
+    //Will return grandparent index
     int GP(int i);
 
+    //Will return parent index
     int PARENT(int i);
 
     //Given index, will retrieve left child's index
