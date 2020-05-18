@@ -215,13 +215,47 @@ void minMaxHeap::insert(int value){
 
 
 //deletes minimum element
+//Replace the root with the last index
+//Check next min level below if it exists, swap with smallest
+//if not, if you are bigger than child or children,
+//swap with smallest child.
+
 void minMaxHeap::deleteMin(){
-    cout<<"deleted min"<<endl;
+    if(vdata.empty()==true){return;}
+    cout<<"deleted "<<vdata[0]<<endl;
+    vdata[0]=vdata[vdata.size()-1]; //replace root with last index
+    vdata.pop_back(); //remove last index
+    TrickleDownMin(0);
     }
 
 //deletes maximum element
+
 void minMaxHeap::deleteMax(){
-    cout<<"deleted max"<<endl;
+    if(vdata.empty()==true){return;}
+    if(vdata.size()==1){
+        cout<<"deleted "<<vdata[0]<<endl;
+        vdata.pop_back();
+        return;
+    }
+    if(vdata.size()==2){
+        cout<<"deleted "<<vdata[1]<<endl;
+        vdata.pop_back();
+        return;
+    }
+    if(vdata[1]>vdata[2]){
+        cout<<"deleted "<<vdata[1]<<endl;
+        vdata[1]=vdata[vdata.size()-1];
+        vdata.pop_back();
+        TrickleDownMax(1);
+        return;
+        }
+    else{
+        cout<<"deleted "<<vdata[2]<<endl;
+        vdata[2]=vdata[vdata.size()-1];
+        vdata.pop_back();
+        TrickleDownMax(2);
+        return;
+        }
     }
 
 //prints heap from left to right
@@ -236,6 +270,232 @@ void minMaxHeap::printHeap(){
         }
         cout<<endl;
     }
+
+int minMaxHeap::minCpr(int x, int y){
+    if(x<y){
+        return x;
+    }
+    else{
+        return y;
+    }
+}
+
+
+int minMaxHeap::descendantMin(int i){
+    //no children, and no grandchildren
+    //return negative
+    if(LEFT(i)>vdata.size()-1){
+        return -1;
+        }
+    
+    //has only left child, no right
+    //return left
+    if(RIGHT(i)>vdata.size()-1){
+        return LEFT(i);
+        }
+   
+    //has only left and right child, no grandchildren
+    //return smallest or the two
+    if( (4*i+3)>vdata.size()-1){
+        if( minCpr( vdata[LEFT(i)], vdata[RIGHT(i)] ) == vdata[LEFT(i)] ){
+            return LEFT(i);
+        }else{
+            return RIGHT(i);}    
+    }
+    
+    //has first grandchild,left,right
+    //return smallest
+    if( (4*i+4)> vdata.size()-1){
+        if(minCpr( vdata[(4*1+3)] ,minCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[(4*1+3)]){
+            return (4*1+3);}
+        if(minCpr( vdata[(4*1+3)] ,minCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[LEFT(i)]){
+            return LEFT(i);}
+        if(minCpr( vdata[(4*1+3)] ,minCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[RIGHT(i)]){
+            return RIGHT(i);}
+        }
+    //has first and second grandchild, left and right child
+    //return smallest
+    if( (4*i+5)> vdata.size()-1){
+        if(minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[(4*i+3)]){
+            return (4*i+3);}
+        if(minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[(4*i+4)]){
+            return (4*i+4);}
+        if(minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[LEFT(i)]){
+            return LEFT(i);}
+        if(minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[RIGHT(i)]){
+            return RIGHT(i);}
+        }
+   //has first,second, and third grandchild, left and right child
+   if( (4*i+6)> vdata.size()-1){
+       if(minCpr(vdata[(4*i+5)],  minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))==vdata[(4*i+3)] ){
+           return (4*i+3);}
+       if(minCpr(vdata[(4*i+5)],  minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))==vdata[(4*i+4)] ){
+           return (4*i+4);}
+       if(minCpr(vdata[(4*i+5)],  minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))==vdata[(4*i+5)] ){
+           return (4*i+5);}
+       if(minCpr(vdata[(4*i+5)],  minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))==vdata[LEFT(i)] ){
+           return LEFT(i);}
+       if(minCpr(vdata[(4*i+5)],  minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))==vdata[RIGHT(i)] ){
+           return RIGHT(i);}
+        }
+   //has all 4 grand children and left/right children
+   else{
+       if(minCpr(vdata[(4*i+6)],minCpr(vdata[(4*i+5)],  minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[(4*i+3)]){
+           return (4*i+3);}
+       if(minCpr(vdata[(4*i+6)],minCpr(vdata[(4*i+5)],  minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[(4*i+4)]){
+           return (4*i+4);}
+       if(minCpr(vdata[(4*i+6)],minCpr(vdata[(4*i+5)],  minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[(4*i+5)]){
+           return (4*i+5);}
+       if(minCpr(vdata[(4*i+6)],minCpr(vdata[(4*i+5)],  minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[(4*i+6)]){
+           return (4*i+6);}
+       if(minCpr(vdata[(4*i+6)],minCpr(vdata[(4*i+5)],  minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[LEFT(i)]){
+           return LEFT(i);}
+       if(minCpr(vdata[(4*i+6)],minCpr(vdata[(4*i+5)],  minCpr( minCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , minCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[RIGHT(i)]){
+           return RIGHT(i);}
+       }
+    return -1;
+    }
+
+void minMaxHeap::TrickleDownMin(int i){
+    if(descendantMin(i)==-1){
+        return;}
+    int m=descendantMin(i);
+    //grandchild
+    if(m==(4*i+3)||m==(4*i+4)||m==(4*i+5)||m==(4*i+6)){
+        if(vdata[m] <vdata[i] ){
+            swap(vdata[m],vdata[i]);
+            if( vdata[m]> vdata[PARENT(m)] ){
+                swap(vdata[m], vdata[PARENT(m)] );
+                }
+        TrickleDownMin(m);
+        return;
+        }
+    }else{
+        if(vdata[m]< vdata[i]){
+            swap(vdata[m], vdata[i]);
+            }
+     return;
+    }
+}
+
+int minMaxHeap::maxCpr(int x, int y){
+    if(x>y){
+        return x;
+    }
+    else{
+        return y;
+    }
+}
+
+
+int minMaxHeap::descendantMax(int i){
+    //no children, and no grandchildren
+    //return negative
+    if(LEFT(i)>vdata.size()-1){
+        return -1;
+        }
+    
+    //has only left child, no right
+    //return left
+    if(RIGHT(i)>vdata.size()-1){
+        return LEFT(i);
+        }
+   
+    //has only left and right child, no grandchildren
+    //return bigger of the two
+    if( (4*i+3)>vdata.size()-1){
+        if( maxCpr( vdata[LEFT(i)], vdata[RIGHT(i)] ) == vdata[LEFT(i)] ){
+            return LEFT(i);
+        }else{
+            return RIGHT(i);}    
+    }
+    
+    //has first grandchild,left,right
+    //return greatest
+    if( (4*i+4)> vdata.size()-1){
+        if(maxCpr( vdata[(4*1+3)] ,maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[(4*1+3)]){
+            return (4*1+3);}
+        if(maxCpr( vdata[(4*1+3)] ,maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[LEFT(i)]){
+            return LEFT(i);}
+        if(maxCpr( vdata[(4*1+3)] ,maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[RIGHT(i)]){
+            return RIGHT(i);}
+        }
+    //has first and second grandchild, left and right child
+    //return smallest
+    if( (4*i+5)> vdata.size()-1){
+        if(maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[(4*i+3)]){
+            return (4*i+3);}
+        if(maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[(4*i+4)]){
+            return (4*i+4);}
+        if(maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[LEFT(i)]){
+            return LEFT(i);}
+        if(maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)]))==vdata[RIGHT(i)]){
+            return RIGHT(i);}
+        }
+   //has first,second, and third grandchild, left and right child
+   if( (4*i+6)> vdata.size()-1){
+       if(maxCpr(vdata[(4*i+5)],  maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))==vdata[(4*i+3)] ){
+           return (4*i+3);}
+       if(maxCpr(vdata[(4*i+5)],  maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))==vdata[(4*i+4)] ){
+           return (4*i+4);}
+       if(maxCpr(vdata[(4*i+5)],  maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))==vdata[(4*i+5)] ){
+           return (4*i+5);}
+       if(maxCpr(vdata[(4*i+5)],  maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))==vdata[LEFT(i)] ){
+           return LEFT(i);}
+       if(maxCpr(vdata[(4*i+5)],  maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))==vdata[RIGHT(i)] ){
+           return RIGHT(i);}
+        }
+   //has all 4 grand children and left/right children
+   else{
+       if(maxCpr(vdata[(4*i+6)],maxCpr(vdata[(4*i+5)],  maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[(4*i+3)]){
+           return (4*i+3);}
+       if(maxCpr(vdata[(4*i+6)],maxCpr(vdata[(4*i+5)],  maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[(4*i+4)]){
+           return (4*i+4);}
+       if(maxCpr(vdata[(4*i+6)],maxCpr(vdata[(4*i+5)],  maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[(4*i+5)]){
+           return (4*i+5);}
+       if(maxCpr(vdata[(4*i+6)],maxCpr(vdata[(4*i+5)],  maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[(4*i+6)]){
+           return (4*i+6);}
+       if(maxCpr(vdata[(4*i+6)],maxCpr(vdata[(4*i+5)],  maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[LEFT(i)]){
+           return LEFT(i);}
+       if(maxCpr(vdata[(4*i+6)],maxCpr(vdata[(4*i+5)],  maxCpr( maxCpr( vdata[(4*i+3)], vdata[(4*i+4)]) , maxCpr(vdata[LEFT(i)],vdata[RIGHT(i)])))) ==vdata[RIGHT(i)]){
+           return RIGHT(i);}
+       }
+    return -1;
+ 
+
+
+
+    }
+
+
+
+
+void minMaxHeap::TrickleDownMax(int i){
+     if(descendantMax(i)==-1){
+        return;}
+    int m=descendantMax(i);
+    //grandchild
+    if(m==(4*i+3)||m==(4*i+4)||m==(4*i+5)||m==(4*i+6)){
+        if(vdata[m] >vdata[i] ){
+            swap(vdata[m],vdata[i]);
+            if( vdata[m]< vdata[PARENT(m)] ){
+                swap(vdata[m], vdata[PARENT(m)] );
+                }
+        TrickleDownMax(m);
+        return;
+        }
+    }else{
+        if(vdata[m]>vdata[i]){
+            swap(vdata[m], vdata[i]);
+            }
+     return;
+    }
+   
+}
+
+
+
+
 
 void minMaxHeap::insert2(int value){
     //insert value

@@ -36,7 +36,22 @@ class minMaxHeap{
     //should percolate the new index up if need be
     void percUP(int i);
 
+    //Helper function to fix a deleted min
+    void TrickleDownMin(int i);
+
+    //Helper function to fix a deleted max
+    void TrickleDownMax(int i);
+
+
     private:
+    int descendantMax(int i);
+
+    int maxCpr(int x, int y);
+
+    int descendantMin(int i);
+
+    int minCpr(int x, int y);
+
     int GP(int i);
 
     int PARENT(int i);
